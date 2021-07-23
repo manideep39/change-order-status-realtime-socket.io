@@ -7,14 +7,34 @@ const socket = io.on("connection", (socket) => {
   return socket;
 });
 
-let orderStatus = 1;
-app.post("/:orderId/:statusCode", (req, res) => {
-  const restaurantId = req.params.orderId;
-  const statusCode = req.params.statusCode;
-  orderStatus = statusCode;
+let orders = [
+  { orderId: "123", userId: "Manideep", orderStatus: 0 },
+  { orderId: "191", userId: "Manideep", orderStatus: 0 },
+  { orderId: "456", userId: "Shubham", orderStatus: 0 },
+  { orderId: "789", userId: "Shubham", orderStatus: 0 },
+];
 
-  socket.emit(`${restaurantId}`, orderStatus);
-  res.send(`Order Status: ${orderStatus}`);
+app.post("/:orderId/:statusCode", (req, res) => {
+  const orderId = req.params.orderId;
+  const statusCode = req.params.statusCode;
+  let targetOrder;
+
+  orders = orders.map((order) => {
+    if (order.orderId === orderId) {
+      targetOrder = {
+        userId: order.userId,
+        orderStatus: statusCode,
+        orderId,
+      };
+      return { ...order, orderStatus: statusCode };
+    } else {
+      return order;
+    }
+  });
+
+  if (targetOrder) socket.emit(`${targetOrder.userId}`, targetOrder);
+
+  res.send({ status: "ok" });
 });
 
 http.listen(PORT, () => {
