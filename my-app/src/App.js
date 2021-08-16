@@ -2,33 +2,16 @@ import { useState } from "react";
 import "./App.css";
 
 import socketClient from "socket.io-client";
-const SERVER = "http://127.0.0.1:8080";
+const SERVER = "http://127.0.0.1:3000";
 
 function App() {
-  const [order, setOrder] = useState({});
-  const [userId] = useState("Shubham");
-
+  const userId = "60f07d868f7a27bf4e4ab08a";
   var socket = socketClient(SERVER);
   socket.on(userId, (order) => {
     console.log(order);
-    setOrder(order);
   });
 
-  return (
-    <div className="App">
-      <h1>Client 2</h1>
-      <h2>
-        User Name: <span style={{ color: "blue" }}>{order.userId}</span>
-      </h2>
-      <h3>
-        Order Id: <span style={{ color: "orange" }}>{order.orderId}</span>
-      </h3>
-      <h3>
-        Order Status:
-        <span style={{ color: "red" }}>{order.orderStatus}</span>
-      </h3>
-    </div>
-  );
+  return <div className="App"></div>;
 }
 
 export default App;
